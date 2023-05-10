@@ -10,16 +10,24 @@ export default async function handler(req, res) {
 
     //fetch the players file from the server
     const playerFile = await axios.get(`${process.env.host}/api/client/servers/${process.env.id}/files/contents?file=/players/${PlayerName.toLowerCase()}.dat`, {
-        responseType: 'arraybuffer',
+        responseType: "arraybuffer",
         headers: { Authorization: `Bearer ${process.env.key}` }
-    }).then(res => res.data)
-        .catch(() => null);
+    })
+    .then(res => res.data)
+    .catch(() => { /* Not Found */ });
 
     //if no player is found return with not found
     if (!playerFile) return res.status(404).send("player not found");
 
     //parse the dat file
     const data = await parse(playerFile);
+
+    //cache the request
+    //cache the image for 5 minutes
+    res.setHeader(
+        "Cache-Control",
+        "public, s-maxage=300, stale-while-revalidate=3600"
+    );
 
     //send the data
     return res.status(200).send(data);
