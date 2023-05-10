@@ -18,11 +18,11 @@ export default async function handler(req, res) {
 
     //set the image header
     res.setHeader("Content-Type", "image/png");
-    
+
     //get the public dir
     const dir = path.join(process.cwd(), "public");
     //import the fallback image
-    const fallback = fs.readFileSync(dir + "/body.png");
+    const fallback = fs.readFileSync(dir + "/head.png");
 
     //if there is no PlayerName return with not found
     if (!PlayerName) return res.status(200).send(fallback);
