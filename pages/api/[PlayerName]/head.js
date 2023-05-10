@@ -1,6 +1,7 @@
 import { createHeadImageFromSkin } from "@/utils/skincut.js";
 import axios from "axios";
 import sharp from "sharp";
+import path from "path";
 import nbt from "nbt";
 import fs from "fs";
 
@@ -17,9 +18,11 @@ export default async function handler(req, res) {
 
     //set the image header
     res.setHeader("Content-Type", "image/png");
-
+    
+    //get the public dir
+    const dir = path.join(process.cwd(), "public");
     //import the fallback image
-    const fallback = fs.readFileSync("./public/head.png");
+    const fallback = fs.readFileSync(dir + "/body.png");
 
     //if there is no PlayerName return with not found
     if (!PlayerName) return res.status(200).send(fallback);
