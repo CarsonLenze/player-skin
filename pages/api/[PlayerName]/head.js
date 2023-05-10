@@ -1,5 +1,6 @@
 import { createHeadImageFromSkin } from "@/utils/skincut.js";
 import axios from "axios";
+import sharp from "sharp";
 import nbt from "nbt";
 
 export default async function handler(req, res) {
@@ -26,7 +27,14 @@ export default async function handler(req, res) {
     const skinBuffer = new Uint8Array(data.Skin.value.Data.value);
     
     //create the head from the buffer
-    const buffer = createHeadImageFromSkin([...skinBuffer]);
+    const head = createHeadImageFromSkin([...skinBuffer]);
+ 
+     //resize the image
+     const buffer = await sharp(head)
+     .resize(180, 180, {
+       kernel: sharp.kernel.nearest
+     })
+     .toBuffer();
 
     //Return the image to the user
     res.setHeader("Content-Type", "image/png");
