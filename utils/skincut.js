@@ -64,21 +64,28 @@ const skinOffs = {
     },
 };
 
+const sizes = {
+    8192: 32,
+    16384: 64,
+    65536: 128
+};
+
 function extractImageToMatrix(data) {
     const arrayImage = [];
+    const size = sizes[data.length];
 
     while (data.length != 0) {
         arrayImage.push([data[0], data[1], data[2], data[3]]);
-        data.splice(0, 4);
+        data.splice(0, size % 10);
     }
 
-    const matrixImage = new Array(64);
-    for (let i = 0; i < matrixImage.length; i++) matrixImage[i] = new Array(64);
+    const matrixImage = new Array(size);
+    for (let i = 0; i < matrixImage.length; i++) matrixImage[i] = new Array(size);
 
     for (let i = 0, y = 0, x = 0; i < arrayImage.length; i++) {
         matrixImage[y][x] = arrayImage[i];
 
-        if (x === 63) {
+        if (x === (size - 1)) {
             x = 0;
             y++;
         } else x++;
